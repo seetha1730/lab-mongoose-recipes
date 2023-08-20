@@ -12,24 +12,49 @@ mongoose
   .connect(MONGODB_URI)
   .then(x => {
     console.log(`Connected to the database: "${x.connection.name}"`);
+   
     // Before adding any recipes to the database, let's remove all existing ones
+   
     return Recipe.deleteMany()
+    
   })
   .then(() => {
     // Run your code here, after you have insured that the connection was made
-    const receipe=  new Schema({
-      title: { type: String, required: true,unique:true },
-      level:{type:String,enum:["Easy Peasy" ,"Amateur Chef" ,"UltraPro Chef"]} ,
-      ingredients:{type:[ String ]},
-      cuisine:{type:String,required: true},
-      dishType:{type:String ,enum:["breakfast", "main_course", "soup", "snack", "drink", "dessert","other"]},
-      image:{type:String,default:"https://images.media-allrecipes.com/images/75131.jpg"},
-      duration:{type:Number,min: 0},
-      creator:{type:String},
-      created:{type:Date,default:Date.now}
-    })
-    
+    const biryani = {
+      title:"Chicken Biryani",
+      level:"Amateur Chef" ,
+      ingredients:["Onion","tomato","spices","ginger and garlic paste",],
+      cuisine:"Indian",
+      dishType:"lunch",
+      image:"/images/biryani.jpg",
+      duration:50,
+      creator:"seetha and anna",
+    }
+    Recipe.create(biryani)
   })
+    .then(() =>{
+      return Recipe.insertMany(data)
+    })
+    .then((receipes)=>{
+      console.log('Inserted recipes:')
+      receipes.forEach(element => {
+        console.log(element)
+      });
+    })
+    .then(() =>{
+     
+      return Recipe.findOneAndUpdate({title:"Rigatoni alla Genovese"},{duration:100})
+      
+    })
+    .then(()=>{
+      console.log('duration updated of Rigatoni alla Genovese')
+      return Recipe.deleteOne({title:'Carrot Cake'})
+  }).then(()=>{
+
+    mongoose.connection.close()
+  })
+  
+
   .catch(error => {
     console.error('Error connecting to the database', error);
   });
