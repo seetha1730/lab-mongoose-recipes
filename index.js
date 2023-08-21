@@ -30,8 +30,16 @@ mongoose
       duration:50,
       creator:"seetha and anna",
     }
-    Recipe.create(biryani)
+    
+   
+  Recipe.create(biryani)
+  .then(()=>{
+   
   })
+  .catch(error => {
+    console.error('Error connecting to the receipe', error);
+  })
+})
     .then(() =>{
       return Recipe.insertMany(data)
     })
